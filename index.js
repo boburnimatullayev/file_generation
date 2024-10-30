@@ -2,38 +2,30 @@
 
 const fs = require("fs");
 const path = require("path");
-const readline = require("readline");
+const inquirer = require("inquirer");
 
-// Terminaldan papka nomini olish
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+const folderName = process.argv[2];
+if (!folderName) {
+  console.log("Iltimos, papka nomini `npx github:<username>/<repository-name> myFolder` tarzida kiriting.");
+  process.exit(1);
+}
 
-rl.question("Iltimos, papka nomini kiriting: ", function (folderName) {
-  if (!folderName) {
-    console.log("Papka nomi kiritilmadi. Iltimos, qayta urinib ko'ring.");
-    rl.close();
-    return;
-  }
-
-  // Foydalanuvchiga variantlarni ko'rsatish
-  console.log("Proyekt turini tanlang:");
-  console.log("1. TypeScript (ts)");
-  console.log("2. React (js)");
-
-  rl.question("Tanlovingizni kiriting (1 yoki 2): ", function (choice) {
-    let projectType;
-    if (choice === "1") {
-      projectType = "ts";
-    } else if (choice === "2") {
-      projectType = "react";
-    } else {
-      console.log("Noto'g'ri tanlov. Iltimos, 1 yoki 2-ni tanlang.");
-      rl.close();
-      return;
+// `inquirer` yordamida tanlov imkoniyatini yaratish
+inquirer
+  .prompt([
+    {
+      type: "list",
+      name: "projectType",
+      message: "Proyekt turini tanlang:",
+      choices: [
+        { name: "TypeScript (ts)", value: "ts" },
+        { name: "React (js)", value: "react" }
+      ]
     }
-
+  ])
+  .then((answers) => {
+    const projectType = answers.projectType;
+    
     // Papka nomiga qo'shimcha qo'shish
     const suffix = projectType === "ts" ? "-ts" : "-react";
     const finalFolderName = `${folderName}${suffix}`;
@@ -65,7 +57,7 @@ export default ${folderName}`
     fs.writeFileSync(cssFilePath, "/* SASS/CSS kodlar shu yerda */");
 
     console.log(`Papka va fayllar yaratildi: ${finalFolderName}`);
-
-    rl.close();
+  })
+  .catch((error) => {
+    console.error("Xatolik yuz berdi:", error);
   });
-});
