@@ -50,7 +50,7 @@ import styles from "./style.module.scss"
 
 const ${folderName}${projectType ? ": React.FC " : ""} = () => {
   return (
-    <div className={styles.container}>${folderName}</div>
+    <div>${folderName}</div>
   )
 }
 
