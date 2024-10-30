@@ -10,14 +10,26 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-rl.question(
-  "Sizning proyekt turini tanlang (ts/react): ",
-  function (projectType) {
-    const folderName = process.argv[2];
-    if (!folderName) {
-      console.log(
-        "Iltimos, papka nomini kiriting. Masalan: `npx github:<username>/<repository-name> myFolder`"
-      );
+rl.question("Iltimos, papka nomini kiriting: ", function (folderName) {
+  if (!folderName) {
+    console.log("Papka nomi kiritilmadi. Iltimos, qayta urinib ko'ring.");
+    rl.close();
+    return;
+  }
+
+  // Foydalanuvchiga variantlarni ko'rsatish
+  console.log("Proyekt turini tanlang:");
+  console.log("1. TypeScript (ts)");
+  console.log("2. React (js)");
+
+  rl.question("Tanlovingizni kiriting (1 yoki 2): ", function (choice) {
+    let projectType;
+    if (choice === "1") {
+      projectType = "ts";
+    } else if (choice === "2") {
+      projectType = "react";
+    } else {
+      console.log("Noto'g'ri tanlov. Iltimos, 1 yoki 2-ni tanlang.");
       rl.close();
       return;
     }
@@ -33,7 +45,7 @@ rl.question(
     // Papkaning ichida js yoki ts va css fayllar yaratish
     const fileExtension = projectType === "ts" ? "ts" : "js";
     const mainFilePath = path.join(folderPath, `index.${fileExtension}`);
-    const cssFilePath = path.join(folderPath, "style.css");
+    const cssFilePath = path.join(folderPath, "style.module.scss");
 
     // js yoki ts va css fayllarni yozish
     fs.writeFileSync(
@@ -44,16 +56,16 @@ import styles from "./style.module.scss"
 
 const ${folderName} = () => {
   return (
-    <div>${folderName}</div>
+    <div className={styles.container}>${folderName}</div>
   )
 }
 
 export default ${folderName}`
     );
-    fs.writeFileSync(cssFilePath, "/* CSS kodlar shu yerda */");
+    fs.writeFileSync(cssFilePath, "/* SASS/CSS kodlar shu yerda */");
 
     console.log(`Papka va fayllar yaratildi: ${finalFolderName}`);
 
     rl.close();
-  }
-);
+  });
+});
