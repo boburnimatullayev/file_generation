@@ -11,5 +11,8 @@
   },
   "keywords": [],
   "author": "Bobur Nimatullayev",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^12.0.1"
+  }
 }
