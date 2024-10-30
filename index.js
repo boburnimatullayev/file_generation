@@ -6,7 +6,9 @@ const inquirer = require("inquirer");
 
 const folderName = process.argv[2];
 if (!folderName) {
-  console.log("Iltimos, papka nomini `npx github:<username>/<repository-name> myFolder` tarzida kiriting.");
+  console.log(
+    "Iltimos, papka nomini `npx github:<username>/<repository-name> myFolder` tarzida kiriting."
+  );
   process.exit(1);
 }
 
@@ -19,23 +21,23 @@ inquirer
       message: "Proyekt turini tanlang:",
       choices: [
         { name: "TypeScript (ts)", value: "ts" },
-        { name: "React (js)", value: "react" }
-      ]
-    }
+        { name: "React (js)", value: "react" },
+      ],
+    },
   ])
   .then((answers) => {
     const projectType = answers.projectType;
-    
+
     // Papka nomiga qo'shimcha qo'shish
-    const suffix = projectType === "ts" ? "-ts" : "-react";
-    const finalFolderName = `${folderName}${suffix}`;
+
+    const finalFolderName = folderName;
 
     // Yangi papka yaratish
     const folderPath = path.join(process.cwd(), finalFolderName);
     fs.mkdirSync(folderPath, { recursive: true });
 
     // Papkaning ichida js yoki ts va css fayllar yaratish
-    const fileExtension = projectType === "ts" ? "ts" : "js";
+    const fileExtension = projectType === "ts" ? "ts" : "jsx";
     const mainFilePath = path.join(folderPath, `index.${fileExtension}`);
     const cssFilePath = path.join(folderPath, "style.module.scss");
 
@@ -46,7 +48,7 @@ inquirer
 import React from 'react'
 import styles from "./style.module.scss"
 
-const ${folderName} = () => {
+const ${folderName}${projectType ? ": React.FC " : ""} = () => {
   return (
     <div className={styles.container}>${folderName}</div>
   )
@@ -54,7 +56,7 @@ const ${folderName} = () => {
 
 export default ${folderName}`
     );
-    fs.writeFileSync(cssFilePath, "/* SASS/CSS kodlar shu yerda */");
+    fs.writeFileSync(cssFilePath, "/* SASS kodlar shu yerda */");
 
     console.log(`Papka va fayllar yaratildi: ${finalFolderName}`);
   })
